@@ -2,16 +2,26 @@ import React, { useState } from 'react'
 import axios from 'axios'
 
 export default function Weather() {
-  const [city, setCity] = useState();
-  const handleCityChange = (event) => {
-    setCity(event.target.value)
+  const [weather, setWeather] = useState();
+  const [lat, setLat] = useState();
+  const [lon, setLon] = useState();
+
+  const handleCityChange1 = (event) => {
+    setLat(event.target.value)
   }
+
+   const handleCityChange2 = (event) => {
+    setLon(event.target.value)
+  }
+  
   const fetchWeather = async () => {
     try {
-      const response = await axios.get(`https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=${city}&appid=${'f3a4d628a3e8c8ff46539b8172e42a80'}`)
-      console.log(response)
+      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=cac40f98bce4d7b73f28b48ce9081b89`)
+      console.log(response);
+      setWeather(response);
     }
-    catch {
+    catch(error)
+    {console.log("error in fetching data",error)
       
     }
   }
@@ -20,9 +30,21 @@ export default function Weather() {
   }
   return (
     <div className="weather-container">
-      <input type='text' placeholder='Enter City Name' value={city} onChange={handleCityChange} />
-      <button onClick={handleClick}>Get Weather</button>
+      <input type='text' placeholder='Enter Latitude' value={lat} onChange={handleCityChange1} />
+      
 
-    </div>
+      <input type='text' placeholder='Enter Longitude' value={lon} onChange={handleCityChange2} />
+
+
+<button onClick={handleClick}>Get Weather</button>
+    
+    {
+    weather && <>
+      <div className="weather-info">
+            <h3>{ weather.name}</h3>
+      </div>
+    </>
+  }
+</div>
   )
 }
